@@ -34,7 +34,7 @@ def call_mediator(protocol, params, message):
         'message': message,
     }
     host, port = get_mediator_address()
-    url = 'http://{}:{}/v1/adaptor/translate_msg'.format(host, port)
+    url = 'http://{}:{}/v1/adaptor/translateMsg'.format(host, port)
     r = requests.post(url, json=data)
 
     if r.status_code == 200:
