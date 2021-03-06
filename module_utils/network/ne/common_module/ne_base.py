@@ -180,7 +180,7 @@ class ConfigBase(object):
         self.ietf_routing = self.json_to_xml(ietf_xml_json)
         if HAS_MEDIATOR:
             # xml_cfg_str = translate_edit_config_content(xml_str)
-            xml_cfg_str = call_mediator('netconf', self.module.params, xml_str)
+            xml_cfg_str = call_mediator('netconf', 'edit-config', self.module.params, xml_str)
             xml_cfg_str = xml_cfg_str.replace('True', 'true').replace('False', 'false')  # ???
         else:
             xml_cfg_str = xml_str
@@ -267,7 +267,7 @@ class ConfigBase(object):
         get_str = update_xml_result.replace('<?xml version="1.0" ?>', '')
         if HAS_MEDIATOR:
             # translate_xml_str = translate_query_filter_content(get_str)
-            translate_xml_str = call_mediator('netconf', self.module.params, get_str)
+            translate_xml_str = call_mediator('netconf', 'get-config', self.module.params, get_str)
         else:
             translate_xml_str = get_str
         return self.get_info_process(translate_xml_str)
@@ -538,7 +538,7 @@ class GetBase(object):
         get_str = xml_parser_join_xmlns(xml_str, self.namespaces, "filter")
         if HAS_MEDIATOR:
             # translate_cfg_get = translate_query_filter_content(get_str)
-            translate_cfg_get = call_mediator('netconf', self.module.params, get_str)
+            translate_cfg_get = call_mediator('netconf', 'get-config', self.module.params, get_str)
         else:
             translate_cfg_get = get_str
         return self.get_info_process(translate_cfg_get)
