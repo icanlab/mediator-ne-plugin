@@ -43,7 +43,7 @@ def pack(type, xml_str):
         return pack_edit_config(xml_str)
     if type == 'get-config':
         return pack_get_config(xml_str)
-    return xml_str
+    raise ValueError('unsupported type {}'.format(type))
 
 
 def unpack_edit_config(xml_str):
@@ -63,7 +63,7 @@ def unpack(type, xml_str):
         return unpack_edit_config(xml_str)
     if type == 'get-config':
         return unpack_get_config(xml_str)
-    return xml_str
+    raise ValueError('unsupported type {}'.format(type))
 
 
 def get_mediator_address():
@@ -105,5 +105,5 @@ def call_mediator(protocol, type, params, message):
     r = requests.post(url, json=data)
 
     if r.status_code == 200:
-        return unpack(type, r.text)
+        return unpack(type, r.content)
     return message
