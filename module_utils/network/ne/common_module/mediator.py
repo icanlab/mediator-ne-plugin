@@ -5,37 +5,46 @@ import yaml
 from lxml import etree
 
 NSMAP = {
-    None: 'urn:ietf:params:xml:ns:netconf:base:1.0'
-}
-NSMAPX = {
-    'def': 'urn:ietf:params:xml:ns:netconf:base:1.0'
+    'nc': 'urn:ietf:params:xml:ns:netconf:base:1.0'
 }
 PARSER = etree.XMLParser(remove_blank_text=True)
-CONFIG_XPATH = etree.XPath('/def:rpc/def:edit-config/def:config', namespaces=NSMAPX)
+CONFIG_XPATH = etree.XPath('/nc:rpc/nc:edit-config/nc:config', namespaces=NSMAP)
+FILTER_XPATH = etree.XPath('/nc:rpc/nc:get-config/nc:filter', namespaces=NSMAP)
 
 
-def pack_edit_config(xml_str, target='running', default_operation='merge'):
-    rpc_node = etree.Element('rpc', {"message-id": '101'}, nsmap=NSMAP)
-    edit_config_node = etree.Element('edit-config')
-    rpc_node.append(edit_config_node)
-
-    target_node = etree.Element('target')
-    etree.SubElement(target_node, target)
-    edit_config_node.append(target_node)
-
-    default_operation_node = etree.Element('default-operation')
-    default_operation_node.text = default_operation
-    edit_config_node.append(default_operation_node)
-
-    config_node = etree.fromstring(xml_str, parser=PARSER)
-    edit_config_node.append(config_node)
-
-    return etree.tostring(rpc_node, encoding='unicode', pretty_print=True)
+def pack_edit_config(xml_str):
+    return '''
+    <?xml version="1.0" ?>
+    <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <edit-config>
+            <target>
+                <running/>
+            </target>
+            {}
+        </edit-config>
+    </rpc>
+    '''.format(xml_str)
 
 
-def pack(type, xml_str, target='running', default_operation='merge'):
+def pack_get_config(xml_str):
+    return '''
+    <?xml version="1.0" ?>
+    <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <get-config>
+            <target>
+                <running/>
+            </target>
+            {}
+        </get-config>
+    </rpc>
+    '''.format(xml_str)
+
+
+def pack(type, xml_str):
     if type == 'edit-config':
-        return pack_edit_config(xml_str, target, default_operation)
+        return pack_edit_config(xml_str)
+    if type == 'get-config':
+        return pack_get_config(xml_str)
     return xml_str
 
 
@@ -45,9 +54,17 @@ def unpack_edit_config(xml_str):
     return etree.tostring(config_node, encoding='unicode', pretty_print=True)
 
 
+def unpack_get_config(xml_str):
+    rpc_node = etree.fromstring(xml_str, parser=PARSER)
+    config_node = FILTER_XPATH(rpc_node)[0]
+    return etree.tostring(config_node, encoding='unicode', pretty_print=True)
+
+
 def unpack(type, xml_str):
     if type == 'edit-config':
         return unpack_edit_config(xml_str)
+    if type == 'get-config':
+        return unpack_get_config(xml_str)
     return xml_str
 
 
@@ -71,7 +88,7 @@ def get_mediator_address():
 
 
 def call_mediator(protocol, type, params, message):
-    neid = params['host']
+    neid = params.get('host')
     if neid is None:
         neid = params['provider']['host']
 
