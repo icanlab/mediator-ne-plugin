@@ -88,6 +88,10 @@ def get_mediator_address():
 
 
 def call_mediator(protocol, type, params, message):
+    # 目前只翻译 edit-config
+    if type in {'get', 'get-config'}:
+        return message
+
     neid = params.get('host')
     if neid is None:
         neid = params['provider']['host']
