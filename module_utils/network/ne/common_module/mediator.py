@@ -13,8 +13,7 @@ FILTER_XPATH = etree.XPath('/nc:rpc/nc:get-config/nc:filter', namespaces=NSMAP)
 
 
 def pack_edit_config(xml_str):
-    return '''
-    <?xml version="1.0" ?>
+    return '''<?xml version="1.0" encoding="UTF-8"?>
     <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
         <edit-config>
             <target>
@@ -27,8 +26,7 @@ def pack_edit_config(xml_str):
 
 
 def pack_get_config(xml_str):
-    return '''
-    <?xml version="1.0" ?>
+    return '''<?xml version="1.0" encoding="UTF-8"?>
     <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
         <get-config>
             <target>
