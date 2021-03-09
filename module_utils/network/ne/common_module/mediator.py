@@ -54,8 +54,8 @@ def unpack_edit_config(xml_str):
 
 def unpack_get_config(xml_str):
     rpc_node = etree.fromstring(xml_str, parser=PARSER)
-    config_node = FILTER_XPATH(rpc_node)[0]
-    return etree.tostring(config_node, encoding='unicode', pretty_print=True)
+    filter_node = FILTER_XPATH(rpc_node)[0]
+    return etree.tostring(filter_node, encoding='unicode', pretty_print=True)
 
 
 def unpack(type, xml_str):
@@ -105,5 +105,6 @@ def call_mediator(protocol, type, params, message):
     r = requests.post(url, json=data)
 
     if r.status_code == 200:
-        return unpack(type, r.content)
+        translated_message = unpack(type, r.content)
+        return translated_message
     return message
