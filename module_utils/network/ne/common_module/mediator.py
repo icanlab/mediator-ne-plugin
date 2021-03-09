@@ -14,28 +14,26 @@ FILTER_XPATH = etree.XPath('/nc:rpc/nc:get-config/nc:filter', namespaces=NSMAP)
 
 def pack_edit_config(xml_str):
     return '''<?xml version="1.0" encoding="UTF-8"?>
-    <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-        <edit-config>
-            <target>
-                <running/>
-            </target>
-            {}
-        </edit-config>
-    </rpc>
-    '''.format(xml_str)
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <edit-config>
+        <target>
+            <running/>
+        </target>
+        {}
+    </edit-config>
+</rpc>'''.format(xml_str)
 
 
 def pack_get_config(xml_str):
     return '''<?xml version="1.0" encoding="UTF-8"?>
-    <rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-        <get-config>
-            <target>
-                <running/>
-            </target>
-            {}
-        </get-config>
-    </rpc>
-    '''.format(xml_str)
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <get-config>
+        <source>
+            <running/>
+        </source>
+        {}
+    </get-config>
+</rpc>'''.format(xml_str)
 
 
 def pack(type, xml_str):
@@ -87,7 +85,7 @@ def get_mediator_address():
 
 def call_mediator(protocol, type, params, message):
     # 目前只翻译 edit-config
-    if type in {'get', 'get-config'}:
+    if type not in {'edit-config'}:
         return message
 
     neid = params.get('host')
