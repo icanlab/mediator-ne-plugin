@@ -47,13 +47,15 @@ def pack(type, xml_str):
 def unpack_edit_config(xml_str):
     rpc_node = etree.fromstring(xml_str, parser=PARSER)
     config_node = CONFIG_XPATH(rpc_node)[0]
-    return etree.tostring(config_node, encoding='unicode', pretty_print=True)
+    foo = etree.tostring(config_node, encoding='unicode', pretty_print=True)
+    return foo.replace(' xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"', '')
 
 
 def unpack_get_config(xml_str):
     rpc_node = etree.fromstring(xml_str, parser=PARSER)
     filter_node = FILTER_XPATH(rpc_node)[0]
-    return etree.tostring(filter_node, encoding='unicode', pretty_print=True)
+    foo = etree.tostring(filter_node, encoding='unicode', pretty_print=True)
+    return foo.replace(' xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"', '')
 
 
 def unpack(type, xml_str):
