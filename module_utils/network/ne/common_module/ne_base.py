@@ -572,6 +572,10 @@ class GetBase(object):
         #  Parsing 2: No data detection
         if "<data/>" in con_obj:
             return conf
+
+        if HAS_MEDIATOR:
+            con_obj = call_mediator('netconf', 'rpc-reply', self.module.params, con_obj)
+
         # Parsing 3: Extracting the echoed message
         new_con_obj_temp = con_obj.replace('\r', '').replace('\n', ''). \
             replace('<?xml version=\"1.0\" encoding=\"UTF-8\"?>', "")

@@ -1,4 +1,6 @@
 import os
+from datetime import datetime
+from pathlib import Path
 
 import requests
 import yaml
@@ -87,14 +89,19 @@ def get_mediator_address():
 
 def call_mediator(protocol, type, params, message):
     # 目前只翻译 edit-config
-    if type not in {'edit-config'}:
+    if type not in {'edit-config', 'get-config'}:
         return message
 
     neid = params.get('host')
     if neid is None:
         neid = params['provider']['host']
 
+    dt = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+    logdir = Path(os.path.expanduser('~/test'))
+
     packed_message = pack(type, message)
+    (logdir / (dt + '-packed_message.xml')).write_text(packed_message)
+
     data = {
         'protocol': protocol,
         'neid': neid,
@@ -106,5 +113,6 @@ def call_mediator(protocol, type, params, message):
 
     if r.status_code == 200:
         translated_message = unpack(type, r.content)
+        (logdir / (dt + '-translated_message.xml')).write_text(translated_message)
         return translated_message
     return message
