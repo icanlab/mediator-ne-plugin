@@ -7,11 +7,12 @@ import yaml
 from lxml import etree
 
 NSMAP = {
-    'nc': 'urn:ietf:params:xml:ns:netconf:base:1.0'
+    'a': 'urn:ietf:params:xml:ns:netconf:base:1.0'
 }
 PARSER = etree.XMLParser(remove_blank_text=True)
-CONFIG_XPATH = etree.XPath('/nc:rpc/nc:edit-config/nc:config', namespaces=NSMAP)
-FILTER_XPATH = etree.XPath('/nc:rpc/nc:get-config/nc:filter', namespaces=NSMAP)
+CONFIG_XPATH = etree.XPath('/a:rpc/a:edit-config/a:config', namespaces=NSMAP)
+FILTER_XPATH = etree.XPath('/a:rpc/a:get-config/a:filter', namespaces=NSMAP)
+DATA_XPATH = etree.XPath('/a:rpc-reply/a:data', namespaces=NSMAP)
 
 
 def pack_edit_config(xml_str):
@@ -38,11 +39,21 @@ def pack_get_config(xml_str):
 </rpc>'''.format(xml_str)
 
 
+def pack_rpc_reply(xml_str):
+    xml_str = xml_str.replace('<?xml version="1.0" encoding="UTF-8"?>', "")
+    return '''<?xml version="1.0" encoding="UTF-8"?>
+<rpc-reply message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    {}
+</rpc-reply>'''.format(xml_str)
+
+
 def pack(type, xml_str):
     if type == 'edit-config':
         return pack_edit_config(xml_str)
     if type == 'get-config':
         return pack_get_config(xml_str)
+    if type == 'rpc-reply':
+        return pack_rpc_reply(xml_str)
     raise ValueError('unsupported type {}'.format(type))
 
 
@@ -60,11 +71,20 @@ def unpack_get_config(xml_str):
     return foo.replace(' xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"', '')
 
 
+def unpack_rpc_reply(xml_str):
+    rpc_node = etree.fromstring(xml_str, parser=PARSER)
+    data_node = DATA_XPATH(rpc_node)[0]
+    foo = etree.tostring(data_node, encoding='unicode', pretty_print=True)
+    return foo.replace(' xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"', '')
+
+
 def unpack(type, xml_str):
     if type == 'edit-config':
         return unpack_edit_config(xml_str)
     if type == 'get-config':
         return unpack_get_config(xml_str)
+    if type == 'rpc-reply':
+        return unpack_rpc_reply(xml_str)
     raise ValueError('unsupported type {}'.format(type))
 
 
@@ -89,7 +109,7 @@ def get_mediator_address():
 
 def call_mediator(protocol, type, params, message):
     # 目前只翻译 edit-config
-    if type not in {'edit-config', 'get-config'}:
+    if type not in {'edit-config', 'get-config', 'rpc-reply'}:
         return message
 
     neid = params.get('host')
