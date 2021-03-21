@@ -116,7 +116,7 @@ def call_mediator(protocol, type, params, message):
     if neid is None:
         neid = params['provider']['host']
 
-    dt = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+    dt = datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')
     logdir = Path(os.path.expanduser('~/test'))
 
     packed_message = pack(type, message)
