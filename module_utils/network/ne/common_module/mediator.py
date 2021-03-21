@@ -107,20 +107,25 @@ def get_mediator_address():
     return host, port
 
 
-def call_mediator(protocol, type, params, message):
-    # 目前只翻译 edit-config
-    if type not in {'edit-config', 'get-config', 'rpc-reply'}:
-        return message
-
+def get_neid(params):
     neid = params.get('host')
     if neid is None:
         neid = params['provider']['host']
+    return neid
+
+
+def call_mediator(protocol, type, params, message):
+    # 目前只翻译部分报文
+    if type not in {'edit-config', 'get-config', 'rpc-reply'}:
+        return message
+
+    neid = get_neid(params)
 
     dt = datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')
     logdir = Path(os.path.expanduser('~/test'))
 
     packed_message = pack(type, message)
-    (logdir / (dt + '-packed_message.xml')).write_text(packed_message)
+    (logdir / (dt + '-' + type + '-packed_msg.xml')).write_text(packed_message)
 
     data = {
         'protocol': protocol,
@@ -133,6 +138,6 @@ def call_mediator(protocol, type, params, message):
 
     if r.status_code == 200:
         translated_message = unpack(type, r.content)
-        (logdir / (dt + '-translated_message.xml')).write_text(translated_message)
+        (logdir / (dt + '-' + type + '-translated_msg.xml')).write_text(translated_message)
         return translated_message
     return message

@@ -186,6 +186,10 @@ class ConfigBase(object):
             xml_cfg_str = xml_str
         self.translate_ietf = xml_cfg_str
         recv_xml = self.set_nc_config_without_default_operation(self.module, xml_cfg_str)
+
+        if HAS_MEDIATOR:
+            recv_xml = call_mediator('netconf', 'rpc-reply', self.module.params, recv_xml)
+
         self.check_response(recv_xml)
         return recv_xml
 
@@ -573,13 +577,13 @@ class GetBase(object):
             con_obj = get_nc_config(self.module, xml_str)
         else:  # ["operation_type"] == "get-config"
             con_obj = self.get_config(self.module, xml_str)
-        #  Parsing 2: No data detection
-        if "<data/>" in con_obj:
-            return conf
 
         if HAS_MEDIATOR:
             con_obj = call_mediator('netconf', 'rpc-reply', self.module.params, con_obj)
 
+        #  Parsing 2: No data detection
+        if "<data/>" in con_obj:
+            return conf
         # Parsing 3: Extracting the echoed message
         new_con_obj_temp = con_obj.replace('\r', '').replace('\n', ''). \
             replace('<?xml version=\"1.0\" encoding=\"UTF-8\"?>', "")
