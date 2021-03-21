@@ -483,6 +483,10 @@ class GetBase(object):
                 # node exist in full.xml not in instance xml,do nothing
                 if sub_node_value is None:
                     continue
+                # NOTE Fix BUG for missing leaf nodes
+                elif isinstance(sub_node_value, str):
+                    sub_element = ET.SubElement(root_tree, sub_node_tag)
+                    sub_element.text = sub_node_value
                 # node need to generate in xml
                 elif isinstance(sub_node_value, list):
                     sub_element = ET.SubElement(root_tree, sub_node_tag)
