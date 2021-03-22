@@ -119,14 +119,17 @@ def call_mediator(protocol, type, params, message):
     if type not in {'edit-config', 'get-config', 'rpc-reply'}:
         return message
 
-    neid = get_neid(params)
-
     dt = datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')
     logdir = Path(os.path.expanduser('~/test'))
+
+    if type == 'rpc-reply' and '<data' not in message:
+        (logdir / (dt + '-' + type + '-raw_msg.xml')).write_text(message)
+        return message
 
     packed_message = pack(type, message)
     (logdir / (dt + '-' + type + '-packed_msg.xml')).write_text(packed_message)
 
+    neid = get_neid(params)
     data = {
         'protocol': protocol,
         'neid': neid,
