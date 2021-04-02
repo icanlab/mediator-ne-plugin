@@ -90,8 +90,11 @@ def unpack(type, xml_str):
 
 def get_mediator_address():
     candidate_list = [
+        '.mediator/plugin.yml',
         '.mediator/plugin.yaml',
+        os.path.expanduser('~/.mediator/plugin.yml'),
         os.path.expanduser('~/.mediator/plugin.yaml'),
+        '/etc/mediator/plugin.yml',
         '/etc/mediator/plugin.yaml',
     ]
     for fn in candidate_list:
