@@ -144,3 +144,35 @@ def call_mediator(protocol, type, params, message):
         (logdir / (dt + '-' + type + '-translated_msg.xml')).write_text(translated_message)
         return translated_message
     return message
+
+
+def datastore_set_controller_config(params, business_tag, message):
+    neid = get_neid(params)
+    data = {
+        'neid': neid,
+        'source': 'running',
+        'module': business_tag,
+        'data': message,
+    }
+    host, port = get_mediator_address()
+    url = 'http://{}:{}/v1/datastore/set_controller_config'.format(host, port)
+    r = requests.post(url, json=data)
+
+    if r.status_code == 200:
+        pass
+
+
+def datastore_set_device_config(params, business_tag, message):
+    neid = get_neid(params)
+    data = {
+        'neid': neid,
+        'source': 'running',
+        'module': business_tag,
+        'data': message,
+    }
+    host, port = get_mediator_address()
+    url = 'http://{}:{}/v1/datastore/set_device_config'.format(host, port)
+    r = requests.post(url, json=data)
+
+    if r.status_code == 200:
+        pass

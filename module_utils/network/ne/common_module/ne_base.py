@@ -184,9 +184,9 @@ class ConfigBase(object):
             xml_cfg_str = xml_cfg_str.replace('True', 'true').replace('False', 'false')  # ???
         else:
             xml_cfg_str = xml_str
+
         self.translate_ietf = xml_cfg_str
         recv_xml = self.set_nc_config_without_default_operation(self.module, xml_cfg_str)
-
         if HAS_MEDIATOR:
             recv_xml = call_mediator('netconf', 'rpc-reply', self.module.params, recv_xml)
 
