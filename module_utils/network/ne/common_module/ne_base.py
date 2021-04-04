@@ -31,7 +31,7 @@ except:
 
 try:
     # from mediator.netconf_translate import translate_edit_config_content, translate_query_filter_content
-    from .mediator import call_mediator
+    from .mediator import call_mediator, datastore_set_controller_config, datastore_set_device_config
     HAS_MEDIATOR = True
 except ImportError:
     HAS_MEDIATOR = False
@@ -283,6 +283,15 @@ class ConfigBase(object):
         # Send a Get message
         # Parsing 1: delete the useless string, pay attention to the replacement according to the business
         con_obj = get_nc_config(self.module, xml_str)
+
+        if HAS_MEDIATOR:
+            device_config = con_obj
+            con_obj = call_mediator('netconf', 'rpc-reply', self.module.params, con_obj)
+            controller_config = con_obj
+
+            # NOTE: Update datastore here.
+            datastore_set_controller_config(self.module.params, self.business_tag, controller_config)
+            datastore_set_device_config(self.module.params, self.business_tag, device_config)
 
         # Parsing 2: No data detection
         if "<data/>" in con_obj:
