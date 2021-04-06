@@ -50,7 +50,7 @@ def pack_rpc_reply(xml_str):
 def pack(type, xml_str):
     if type == 'edit-config':
         return pack_edit_config(xml_str)
-    if type == 'get-config':
+    if type == 'get-config' or type == 'get':
         return pack_get_config(xml_str)
     if type == 'rpc-reply':
         return pack_rpc_reply(xml_str)
@@ -81,7 +81,7 @@ def unpack_rpc_reply(xml_str):
 def unpack(type, xml_str):
     if type == 'edit-config':
         return unpack_edit_config(xml_str)
-    if type == 'get-config':
+    if type == 'get-config' or type == 'get':
         return unpack_get_config(xml_str)
     if type == 'rpc-reply':
         return unpack_rpc_reply(xml_str)
@@ -119,7 +119,7 @@ def get_neid(params):
 
 def call_mediator(protocol, type, params, message):
     # 目前只翻译部分报文
-    if type not in {'edit-config', 'get-config', 'rpc-reply'}:
+    if type not in {'edit-config', 'get', 'get-config', 'rpc-reply'}:
         return message
 
     dt = datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')
