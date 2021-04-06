@@ -154,7 +154,7 @@ def datastore_set_controller_config(params, business_tag, message):
     data = {
         'neid': neid,
         'source': 'running',
-        'module': business_tag,
+        'module': business_tag[0],
         'data': message,
     }
     host, port = get_mediator_address()
@@ -170,7 +170,7 @@ def datastore_set_device_config(params, business_tag, message):
     data = {
         'neid': neid,
         'source': 'running',
-        'module': business_tag,
+        'module': business_tag[0],
         'data': message,
     }
     host, port = get_mediator_address()
