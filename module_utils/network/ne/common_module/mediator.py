@@ -149,12 +149,12 @@ def call_mediator(protocol, type, params, message):
     return message
 
 
-def datastore_set_controller_config(params, business_tag, message):
+def datastore_set_controller_config(params, module, message):
     neid = get_neid(params)
     data = {
         'neid': neid,
         'source': 'running',
-        'module': business_tag[0],
+        'module': module,
         'data': message,
     }
     configdata = get_configdata()
@@ -167,12 +167,12 @@ def datastore_set_controller_config(params, business_tag, message):
         pass
 
 
-def datastore_set_device_config(params, business_tag, message):
+def datastore_set_device_config(params, module, message):
     neid = get_neid(params)
     data = {
         'neid': neid,
         'source': 'running',
-        'module': business_tag[0],
+        'module': module,
         'data': message,
     }
     configdata = get_configdata()
