@@ -88,7 +88,7 @@ def unpack(type, xml_str):
     raise ValueError('unsupported type {}'.format(type))
 
 
-def get_mediator_address():
+def get_configdata():
     candidate_list = [
         '.mediator/plugin.yml',
         '.mediator/plugin.yaml',
@@ -105,9 +105,7 @@ def get_mediator_address():
     else:
         raise RuntimeError('missing mediator config file')
 
-    host = data['mediator_host']
-    port = data['mediator_port']
-    return host, port
+    return data
 
 
 def get_neid(params):
@@ -138,7 +136,9 @@ def call_mediator(protocol, type, params, message):
         'neid': neid,
         'message': packed_message,
     }
-    host, port = get_mediator_address()
+    configdata = get_configdata()
+    host = configdata['mediator_host']
+    port = configdata['mediator_port']
     url = 'http://{}:{}/v1/adaptor/translateMsg'.format(host, port)
     r = requests.post(url, json=data)
 
@@ -157,7 +157,9 @@ def datastore_set_controller_config(params, business_tag, message):
         'module': business_tag[0],
         'data': message,
     }
-    host, port = get_mediator_address()
+    configdata = get_configdata()
+    host = configdata['mediator_controller_host']
+    port = configdata['mediator_controller_port']
     url = 'http://{}:{}/v1/datastore/set_controller_config'.format(host, port)
     r = requests.post(url, json=data)
 
@@ -173,7 +175,9 @@ def datastore_set_device_config(params, business_tag, message):
         'module': business_tag[0],
         'data': message,
     }
-    host, port = get_mediator_address()
+    configdata = get_configdata()
+    host = configdata['mediator_controller_host']
+    port = configdata['mediator_controller_port']
     url = 'http://{}:{}/v1/datastore/set_device_config'.format(host, port)
     r = requests.post(url, json=data)
 
