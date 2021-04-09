@@ -588,7 +588,13 @@ class GetBase(object):
             con_obj = self.get_config(self.module, xml_str)
 
         if HAS_MEDIATOR:
+            device_config = con_obj
             con_obj = call_mediator('netconf', 'rpc-reply', self.module.params, con_obj)
+            controller_config = con_obj
+
+            # NOTE: Update datastore here.
+            datastore_set_controller_config(self.module.params, self.business_tag[0], controller_config)
+            datastore_set_device_config(self.module.params, '', device_config)
 
         #  Parsing 2: No data detection
         if "<data/>" in con_obj:
