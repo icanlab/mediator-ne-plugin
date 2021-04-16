@@ -128,8 +128,7 @@ def call_mediator(protocol, type, params, message):
         return message
 
     packed_message = pack(type, message)
-    if type != 'get':
-        (logdir / (dt + '-' + type + '-packed_msg.xml')).write_text(packed_message)
+    (logdir / (dt + '-' + type + '-packed_msg.xml')).write_text(packed_message)
 
     neid = get_neid(params)
     data = {
@@ -145,8 +144,7 @@ def call_mediator(protocol, type, params, message):
 
     if r.status_code == 200:
         translated_message = unpack(type, r.content)
-        if type != 'get':
-            (logdir / (dt + '-' + type + '-translated_msg.xml')).write_text(translated_message)
+        (logdir / (dt + '-' + type + '-translated_msg.xml')).write_text(translated_message)
         return translated_message
     return message
 
