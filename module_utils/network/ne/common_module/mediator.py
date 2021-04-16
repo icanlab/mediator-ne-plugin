@@ -115,7 +115,7 @@ def get_neid(params):
     return neid
 
 
-def call_mediator(protocol, type, params, message):
+def call_mediator(protocol, type, params, message, *, do_log=True):
     # 目前只翻译部分报文
     if type not in {'edit-config', 'get', 'get-config', 'rpc-reply'}:
         return message
@@ -124,11 +124,13 @@ def call_mediator(protocol, type, params, message):
     logdir = Path(os.path.expanduser('~/test'))
 
     if type == 'rpc-reply' and '<data' not in message:
-        (logdir / (dt + '-' + type + '-raw_msg.xml')).write_text(message)
+        if do_log:
+            (logdir / (dt + '-' + type + '-raw_msg.xml')).write_text(message)
         return message
 
     packed_message = pack(type, message)
-    (logdir / (dt + '-' + type + '-packed_msg.xml')).write_text(packed_message)
+    if do_log:
+        (logdir / (dt + '-' + type + '-packed_msg.xml')).write_text(packed_message)
 
     neid = get_neid(params)
     data = {
@@ -144,7 +146,8 @@ def call_mediator(protocol, type, params, message):
 
     if r.status_code == 200:
         translated_message = unpack(type, r.content)
-        (logdir / (dt + '-' + type + '-translated_msg.xml')).write_text(translated_message)
+        if do_log:
+            (logdir / (dt + '-' + type + '-translated_msg.xml')).write_text(translated_message)
         return translated_message
     return message
 

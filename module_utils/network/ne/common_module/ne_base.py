@@ -271,7 +271,7 @@ class ConfigBase(object):
         get_str = update_xml_result.replace('<?xml version="1.0" ?>', '')
         if HAS_MEDIATOR:
             # translate_xml_str = translate_query_filter_content(get_str)
-            translate_xml_str = call_mediator('netconf', 'get', self.module.params, get_str)
+            translate_xml_str = call_mediator('netconf', 'get', self.module.params, get_str, do_log=False)
         else:
             translate_xml_str = get_str
         return self.get_info_process(translate_xml_str)
@@ -286,7 +286,7 @@ class ConfigBase(object):
 
         if HAS_MEDIATOR:
             device_config = con_obj
-            con_obj = call_mediator('netconf', 'rpc-reply', self.module.params, con_obj)
+            con_obj = call_mediator('netconf', 'rpc-reply', self.module.params, con_obj, do_log=False)
             controller_config = con_obj
 
             # NOTE: Update datastore here.
