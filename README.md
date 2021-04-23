@@ -31,7 +31,7 @@ ncclient_path=/usr/local/lib/python3.6/dist-packages/ncclient
 
 Some arguments should be given in the config file `.mediator/plugin.yml` or `~/.mediator/plugin.yml`.
 
-The following is a example:
+The following is an example:
 
 ```yaml
 ---
