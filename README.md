@@ -22,6 +22,8 @@ Set shell variable `ansible_path` and `ncclient_path`, and run script:
 
 ```
 cd mediator-ne-plugin
+ansible_path=/usr/local/lib/python3.6/dist-packages/ansible
+ncclient_path=/usr/local/lib/python3.6/dist-packages/ncclient
 ./install.sh
 ```
 
