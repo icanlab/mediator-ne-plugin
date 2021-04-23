@@ -7,7 +7,7 @@
 - ncclient
 
 ```
-pip3 install ansilbe==2.9.9 ncclient
+pip3 install ansible==2.9.9 ncclient
 ```
 
 ## Installation
