@@ -18,7 +18,7 @@ Download code:
 git clone https://github.com/icanlab/mediator-ne-plugin.git
 ```
 
-Set shell variable `ansible_path` and `ncclient_path`, and run script:
+Locate your `ansible` and `ncclient` installation directories. Set shell variable `ansible_path` and `ncclient_path`, then run installation script:
 
 ```
 cd mediator-ne-plugin
@@ -41,4 +41,4 @@ mediator_controller_host: 127.0.0.1
 mediator_controller_port: 8089
 ```
 
-All the four arguments are required.
+All the four arguments are **required**.
