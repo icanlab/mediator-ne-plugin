@@ -186,3 +186,39 @@ def datastore_set_device_config(params, module, message):
 
     if r.status_code == 200:
         pass
+
+
+def datastore_update_controller_config(params, module, message):
+    neid = get_neid(params)
+    data = {
+        'neid': neid,
+        'source': 'running',
+        'module': module,
+        'data': message,
+    }
+    configdata = get_configdata()
+    host = configdata['mediator_controller_host']
+    port = configdata['mediator_controller_port']
+    url = 'http://{}:{}/v1/datastore/update_controller_config'.format(host, port)
+    r = requests.post(url, json=data)
+
+    if r.status_code == 200:
+        pass
+
+
+def datastore_update_device_config(params, module, message):
+    neid = get_neid(params)
+    data = {
+        'neid': neid,
+        'source': 'running',
+        'module': module,
+        'data': message,
+    }
+    configdata = get_configdata()
+    host = configdata['mediator_controller_host']
+    port = configdata['mediator_controller_port']
+    url = 'http://{}:{}/v1/datastore/update_device_config'.format(host, port)
+    r = requests.post(url, json=data)
+
+    if r.status_code == 200:
+        pass
