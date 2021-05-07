@@ -152,73 +152,78 @@ def call_mediator(protocol, type, params, message, *, do_log=True):
     return message
 
 
-def datastore_set_controller_config(params, module, message):
-    neid = get_neid(params)
-    data = {
-        'neid': neid,
-        'source': 'running',
-        'module': module,
-        'data': message,
-    }
-    configdata = get_configdata()
-    host = configdata['mediator_controller_host']
-    port = configdata['mediator_controller_port']
-    url = 'http://{}:{}/v1/datastore/set_controller_config'.format(host, port)
-    r = requests.post(url, json=data)
+class Datastore:
+    api_list = [
+        'set_controller_config',
+        'set_device_config',
+        'update_controller_config',
+        'update_device_config',
+    ]
 
-    if r.status_code == 200:
-        pass
+    def __init__(self):
+        config = get_configdata()
+        host = config['mediator_controller_host']
+        port = config['mediator_controller_port']
+        self.base_url = 'http://{}:{}/v1/datastore/'.format(host, port)
+
+    def _make_url(self, api):
+        return self.base_url + api
+
+    def set_controller_config(self, params, module, message):
+        neid = get_neid(params)
+        data = {
+            'neid': neid,
+            'source': 'running',
+            'module': module,
+            'data': message,
+        }
+        url = self._make_url('set_controller_config')
+        r = requests.post(url, json=data)
+
+        if r.status_code == 200:
+            pass
+
+    def set_device_config(self, params, module, message):
+        neid = get_neid(params)
+        data = {
+            'neid': neid,
+            'source': 'running',
+            'module': module,
+            'data': message,
+        }
+        url = self._make_url('set_device_config')
+        r = requests.post(url, json=data)
+
+        if r.status_code == 200:
+            pass
+
+    def update_controller_config(self, params, module, message):
+        neid = get_neid(params)
+        data = {
+            'neid': neid,
+            'source': 'running',
+            'module': module,
+            'data': message,
+        }
+        url = self._make_url('update_controller_config')
+        r = requests.post(url, json=data)
+
+        if r.status_code == 200:
+            pass
+
+    def update_device_config(self, params, module, message):
+        neid = get_neid(params)
+        data = {
+            'neid': neid,
+            'source': 'running',
+            'module': module,
+            'data': message,
+        }
+        url = self._make_url('update_device_config')
+        r = requests.post(url, json=data)
+
+        if r.status_code == 200:
+            pass
 
 
-def datastore_set_device_config(params, module, message):
-    neid = get_neid(params)
-    data = {
-        'neid': neid,
-        'source': 'running',
-        'module': module,
-        'data': message,
-    }
-    configdata = get_configdata()
-    host = configdata['mediator_controller_host']
-    port = configdata['mediator_controller_port']
-    url = 'http://{}:{}/v1/datastore/set_device_config'.format(host, port)
-    r = requests.post(url, json=data)
-
-    if r.status_code == 200:
-        pass
-
-
-def datastore_update_controller_config(params, module, message):
-    neid = get_neid(params)
-    data = {
-        'neid': neid,
-        'source': 'running',
-        'module': module,
-        'data': message,
-    }
-    configdata = get_configdata()
-    host = configdata['mediator_controller_host']
-    port = configdata['mediator_controller_port']
-    url = 'http://{}:{}/v1/datastore/update_controller_config'.format(host, port)
-    r = requests.post(url, json=data)
-
-    if r.status_code == 200:
-        pass
-
-
-def datastore_update_device_config(params, module, message):
-    neid = get_neid(params)
-    data = {
-        'neid': neid,
-        'source': 'running',
-        'module': module,
-        'data': message,
-    }
-    configdata = get_configdata()
-    host = configdata['mediator_controller_host']
-    port = configdata['mediator_controller_port']
-    url = 'http://{}:{}/v1/datastore/update_device_config'.format(host, port)
-    r = requests.post(url, json=data)
-
-    if r.status_code == 200:
-        pass
+datastore = Datastore()
