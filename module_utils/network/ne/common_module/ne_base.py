@@ -589,11 +589,8 @@ class GetBase(object):
             controller_config = con_obj
 
             # NOTE: Update datastore here.
-            # NE 的限制：难以区别是否更新配置。
-            # 只有当查询全部配置时，才更新缓存。
-            if not self.module.params[self.business_tag[0]]:
-                datastore.set_controller_config(self.module.params, self.business_tag[0], controller_config)
-                datastore.set_device_config(self.module.params, '', device_config)
+            datastore.set_controller_config(self.module.params, self.business_tag[0], controller_config)
+            datastore.set_device_config(self.module.params, '', device_config)
 
         #  Parsing 2: No data detection
         if "<data/>" in con_obj:
