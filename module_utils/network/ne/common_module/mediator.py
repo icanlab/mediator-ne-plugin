@@ -121,7 +121,7 @@ def call_mediator(protocol, type, params, message, *, do_log=True):
         return message
 
     dt = datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')
-    logdir = Path(os.path.expanduser('~/test'))
+    logdir = Path('~/test').expanduser()
 
     if type == 'rpc-reply' and '<data' not in message:
         if do_log:
@@ -145,9 +145,11 @@ def call_mediator(protocol, type, params, message, *, do_log=True):
     r = requests.post(url, json=data)
 
     if r.status_code == 200:
+        if do_log:
+            (logdir / (dt + '-' + type + '-translated_msg.xml')).write_bytes(r.content)
         translated_message = unpack(type, r.content)
         if do_log:
-            (logdir / (dt + '-' + type + '-translated_msg.xml')).write_text(translated_message)
+            (logdir / (dt + '-' + type + '-unpacked_msg.xml')).write_text(translated_message)
         return translated_message
     return message
 
