@@ -148,8 +148,6 @@ def call_mediator(protocol, type, params, message, *, do_log=True):
         if do_log:
             (logdir / (dt + '-' + type + '-translated_msg.xml')).write_bytes(r.content)
         translated_message = unpack(type, r.content)
-        if do_log:
-            (logdir / (dt + '-' + type + '-unpacked_msg.xml')).write_text(translated_message)
         return translated_message
     return message
 
