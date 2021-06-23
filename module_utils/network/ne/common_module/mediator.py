@@ -158,6 +158,7 @@ class Datastore:
         'set_device_config',
         'update_controller_config',
         'update_device_config',
+        'update_redis_for_mediator'
     ]
 
     def __init__(self):
@@ -168,6 +169,18 @@ class Datastore:
 
     def _make_url(self, api):
         return self.base_url + api
+
+    def update_redis_for_mediator(self, params, type):
+        # type is in {'controller', 'device'}
+        neid = get_neid(params)
+        query = {
+            'neid': neid,
+            'source': 'running',
+            'type': type,
+        }
+        url = self._make_url('set_controller_config')
+        r = requests.get(url, params=query)
+
 
     def set_controller_config(self, params, module, message):
         neid = get_neid(params)

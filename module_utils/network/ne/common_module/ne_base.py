@@ -589,8 +589,10 @@ class GetBase(object):
             controller_config = con_obj
 
             # NOTE: Update datastore here.
-            datastore.set_controller_config(self.module.params, self.business_tag[0], controller_config)
-            datastore.set_device_config(self.module.params, '', device_config)
+            # datastore.set_controller_config(self.module.params, self.business_tag[0], controller_config)
+            # datastore.set_device_config(self.module.params, '', device_config)
+            datastore.update_redis_for_mediator(self.module.params, 'controller')
+            datastore.update_redis_for_mediator(self.module.params, 'device')
 
         #  Parsing 2: No data detection
         if "<data/>" in con_obj:
