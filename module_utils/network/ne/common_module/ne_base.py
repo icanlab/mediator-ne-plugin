@@ -187,6 +187,12 @@ class ConfigBase(object):
 
         self.translate_ietf = xml_cfg_str
         recv_xml = self.set_nc_config_without_default_operation(self.module, xml_cfg_str)
+
+        if HAS_MEDIATOR:
+            # NOTE: update datastore
+            datastore.update_redis_for_mediator(self.module.params, 'controller')
+            datastore.update_redis_for_mediator(self.module.params, 'device')
+
         if HAS_MEDIATOR:
             recv_xml = call_mediator('netconf', 'rpc-reply', self.module.params, recv_xml)
 
@@ -591,8 +597,8 @@ class GetBase(object):
             # NOTE: Update datastore here.
             # datastore.set_controller_config(self.module.params, self.business_tag[0], controller_config)
             # datastore.set_device_config(self.module.params, '', device_config)
-            datastore.update_redis_for_mediator(self.module.params, 'controller')
-            datastore.update_redis_for_mediator(self.module.params, 'device')
+            # datastore.update_redis_for_mediator(self.module.params, 'controller')
+            # datastore.update_redis_for_mediator(self.module.params, 'device')
 
         #  Parsing 2: No data detection
         if "<data/>" in con_obj:

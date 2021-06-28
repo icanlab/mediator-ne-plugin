@@ -181,7 +181,6 @@ class Datastore:
         url = self._make_url('set_controller_config')
         r = requests.get(url, params=query)
 
-
     def set_controller_config(self, params, module, message):
         neid = get_neid(params)
         data = {
