@@ -178,7 +178,7 @@ class Datastore:
             'source': 'running',
             'type': type,
         }
-        url = self._make_url('set_controller_config')
+        url = self._make_url('update_redis_for_mediator')
         r = requests.get(url, params=query)
 
     def set_controller_config(self, params, module, message):
