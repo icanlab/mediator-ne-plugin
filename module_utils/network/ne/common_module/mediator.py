@@ -176,7 +176,7 @@ class Datastore:
         query = {
             'neid': neid,
             'source': 'running',
-            'type': type,
+            'type_': type,
         }
         url = self._make_url('update_redis_for_mediator')
         r = requests.get(url, params=query)
