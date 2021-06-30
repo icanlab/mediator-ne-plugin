@@ -182,7 +182,7 @@ class Datastore:
         r = requests.get(url, params=query)
 
         if r.status_code == 200:
-            pass
+            return True
 
     def set_controller_config(self, params, module, message):
         neid = get_neid(params)
