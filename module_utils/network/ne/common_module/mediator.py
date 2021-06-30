@@ -176,10 +176,13 @@ class Datastore:
         query = {
             'neid': neid,
             'source': 'running',
-            'type_': type,
+            'type_': type,  # note the underline
         }
         url = self._make_url('update_redis_for_mediator')
         r = requests.get(url, params=query)
+
+        if r.status_code == 200:
+            pass
 
     def set_controller_config(self, params, module, message):
         neid = get_neid(params)
