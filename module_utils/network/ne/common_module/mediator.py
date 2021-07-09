@@ -1,4 +1,5 @@
 import os
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -130,7 +131,7 @@ def call_mediator(protocol, type, params, message, *, do_log=True):
 
     packed_message = pack(type, message)
     if do_log:
-        e = etree.fromstring(packed_message, parser=PARSER)
+        e = etree.fromstring(packed_message.encode(), parser=PARSER)
         m = etree.tostring(e, encoding="utf-8", xml_declaration=True, pretty_print=True)
         logdir.joinpath(dt + '-' + type + '-packed_msg.xml').write_bytes(m)
 
@@ -144,7 +145,12 @@ def call_mediator(protocol, type, params, message, *, do_log=True):
     host = configdata['mediator_host']
     port = configdata['mediator_port']
     url = 'http://{}:{}/v1/adaptor/translateMsg'.format(host, port)
+
+    start = time.perf_counter()
     r = requests.post(url, json=data)
+    elapsed = time.perf_counter() - start
+    with logdir.joinpath('benchmark.txt').open('a', encoding='utf-8') as f:
+        f.write(f"[{dt}] {type} took up {elapsed:.3f} seconds.\n")
 
     if r.status_code == 200:
         if do_log:
