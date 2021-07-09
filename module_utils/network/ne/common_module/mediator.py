@@ -125,12 +125,14 @@ def call_mediator(protocol, type, params, message, *, do_log=True):
 
     if type == 'rpc-reply' and '<data' not in message:
         if do_log:
-            (logdir / (dt + '-' + type + '-raw_msg.xml')).write_text(message)
+            logdir.joinpath(dt + '-' + type + '-raw_msg.xml').write_text(message)
         return message
 
     packed_message = pack(type, message)
     if do_log:
-        (logdir / (dt + '-' + type + '-packed_msg.xml')).write_text(packed_message)
+        e = etree.fromstring(packed_message, parser=PARSER)
+        m = etree.tostring(e, encoding="utf-8", xml_declaration=True, pretty_print=True)
+        logdir.joinpath(dt + '-' + type + '-packed_msg.xml').write_bytes(m)
 
     neid = get_neid(params)
     data = {
@@ -146,7 +148,7 @@ def call_mediator(protocol, type, params, message, *, do_log=True):
 
     if r.status_code == 200:
         if do_log:
-            (logdir / (dt + '-' + type + '-translated_msg.xml')).write_bytes(r.content)
+            logdir.joinpath(dt + '-' + type + '-translated_msg.xml').write_bytes(r.content)
         translated_message = unpack(type, r.content)
         return translated_message
     return message
