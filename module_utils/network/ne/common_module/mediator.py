@@ -154,7 +154,8 @@ def call_mediator(protocol, type, params, message, *, do_log=True):
 
     if r.status_code == 200:
         if do_log:
-            logdir.joinpath(dt + '-' + type + '-translated_msg.xml').write_bytes(r.content)
+            xml = r.content.replace(b'True', b'true').replace(b'False', b'false')
+            logdir.joinpath(dt + '-' + type + '-translated_msg.xml').write_bytes(xml)
         translated_message = unpack(type, r.content)
         return translated_message
     return message
