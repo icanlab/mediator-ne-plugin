@@ -123,6 +123,7 @@ def call_mediator(protocol, type, params, message, *, do_log=True):
 
     dt = datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')
     logdir = Path('~/test').expanduser()
+    logdir.mkdir(parents=True, exist_ok=True)
 
     if type == 'rpc-reply' and '<data' not in message:
         if do_log:
